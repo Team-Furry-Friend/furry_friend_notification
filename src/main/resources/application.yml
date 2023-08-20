@@ -1,0 +1,4 @@
+spring:
+  config:
+    import:
+      - classpath:Furry_Friend_Notification_Security/application.yml
