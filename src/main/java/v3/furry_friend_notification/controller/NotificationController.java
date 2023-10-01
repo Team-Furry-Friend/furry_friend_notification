@@ -34,7 +34,6 @@ public class NotificationController {
             log.error("알림 조회 실패: " + e.getMessage(), e);
             return ApiResponse.fail(400, "알림 조회 실패: " + e.getMessage());
         }
-
     }
 
     @PostMapping("")

@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,19 +14,28 @@ import v3.furry_friend_notification.service.dto.NotificationResponseDTO;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationId;
     private Long senderId;
-    private Long senderName;
+    private String senderName;
     private String content;
     private String notificationLink;
-    private boolean read = false;
+
+    private boolean notificationRead;
     private Long recipientId;
+
+    @Builder
+    public Notification(Long senderId, String senderName, String content, String notificationLink, boolean notificationRead, Long recipientId) {
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.content = content;
+        this.notificationLink = notificationLink;
+        this.notificationRead = notificationRead;
+        this.recipientId = recipientId;
+    }
 
     public NotificationResponseDTO entityToDTO(Notification notification){
 
@@ -38,12 +46,12 @@ public class Notification extends BaseEntity {
             .senderName(notification.getSenderName())
             .recipientId(notification.getRecipientId())
             .notificationLink(notification.getNotificationLink())
-            .read(notification.isRead())
+            .notificationRead(notification.isNotificationRead())
             .regDate(notification.getRegDate())
             .build();
     }
 
-    public void setRead(boolean read){
-        this.read = read;
+    public void setRead(boolean notificationRead){
+        this.notificationRead = notificationRead;
     }
 }

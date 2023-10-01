@@ -14,11 +14,11 @@ public class NotificationResponseDTO {
     private Long notificationId;
 
     private Long senderId;
-    private Long senderName;
+    private String senderName;
     private String content;
     private String notificationLink;
 
-    private boolean read;
+    private boolean notificationRead;
     private Long recipientId;
 
     private LocalDateTime regDate;
