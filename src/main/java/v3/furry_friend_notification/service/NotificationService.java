@@ -70,5 +70,18 @@ public class NotificationService {
     // 알림 저장
     public void saveNotification(NotificationRequestDTO notificationRequestDTO){
 
+        try {
+
+            // 토큰 검증 및 알림 생성
+            JwtResponse jwtResponse = tokenService.getMember(notificationRequestDTO.getAccessToken());
+            Notification notification = notificationRequestDTO.dtoToEntity(notificationRequestDTO, jwtResponse);
+
+            // 알림 저장
+            notificationRepository.save(notification);
+        }catch (Exception e){
+
+            log.error("" + e.getMessage(), e);
+            throw new RuntimeException("" + e.getMessage());
+        }
     }
 }
