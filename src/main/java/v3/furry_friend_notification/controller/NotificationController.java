@@ -19,7 +19,7 @@ import v3.furry_friend_notification.service.dto.NotificationResponseDTO;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/notification")
+@RequestMapping("/notifications")
 public class NotificationController {
 
     private final NotificationService notificationService;

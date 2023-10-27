@@ -1,7 +1,9 @@
 package v3.furry_friend_notification.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,10 @@ import v3.furry_friend_notification.repository.NotificationRepository;
 import v3.furry_friend_notification.service.dto.NotificationRequestDTO;
 import v3.furry_friend_notification.service.dto.NotificationResponseDTO;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -22,6 +28,8 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final TokenService tokenService;
+
+    private final FirebaseMessaging firebaseMessaging;
 
     // 알림 조회
     @Async
@@ -78,10 +86,33 @@ public class NotificationService {
 
             // 알림 저장
             notificationRepository.save(notification);
+
+            // 알림 전송
+            sendNotification(notificationRequestDTO);
         }catch (Exception e){
 
             log.error("" + e.getMessage(), e);
             throw new RuntimeException("" + e.getMessage());
+        }
+    }
+
+    public void sendNotification(NotificationRequestDTO notificationRequestDTO) throws
+        Exception {
+        Message message = Message.builder()
+            .setToken(notificationRequestDTO.getFirebaseToken())
+            .putData("recipientId", Long.toString(notificationRequestDTO.getRecipientId()))
+            .putData("content", notificationRequestDTO.getContent())
+            .putData("link", notificationRequestDTO.getNotificationLink())
+            .putData("time", String.valueOf(LocalDateTime.now()))
+            .build();
+
+        try {
+            firebaseMessaging.send(message);
+            String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+            log.info("알림 전송: " + response);
+        }catch (FirebaseMessagingException e){
+            log.error("FirebaseMessaging 에러" + e.getMessage(), e);
+            throw new Exception("FirebaseMessaging 에러" + e.getMessage());
         }
     }
 }

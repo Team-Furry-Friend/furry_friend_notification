@@ -17,6 +17,7 @@ public class NotificationRequestDTO {
     private String content;
     private String notificationLink;
     private String accessToken;
+    private String firebaseToken;
 
     @Builder
     public Notification dtoToEntity(NotificationRequestDTO notificationRequestDTO, JwtResponse jwtResponse){
